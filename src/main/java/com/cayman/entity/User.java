@@ -3,16 +3,29 @@ package com.cayman.entity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
+@NamedQueries({
+        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id = :id"),
+        @NamedQuery(name = User.GET_ALL, query = "SELECT DISTINCT(u) FROM User u LEFT JOIN FETCH u.roles ORDER BY u.firstName"),
+        //@NamedQuery(name = User.GET_ALL, query = "SELECT u FROM User u"),
+        @NamedQuery(name = User.GET_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email = :email")
+})
 
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
-public class User {
-    @Id
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    private int userId;
+public class User extends BaseEntity {
+    public final static String DELETE = "User.delete";
+    public final static String GET_ALL = "User.getAll";
+    public final static String GET_BY_EMAIL = "User.getByEmail";
 
     @Column(name = "login", nullable = false)
     @NotEmpty
@@ -42,33 +55,28 @@ public class User {
     @NotEmpty
     private boolean enabled = true;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Account> accountList;
 
-    @OneToOne (cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "user")
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     public User() {
     }
 
     public User(Integer userId, String login, String password, String firstName,
-                String lastName, String email, Date registered, Role role) {
-        this.userId = userId;
+                String lastName, String email, Date registered, Set<Role> roles) {
+        super(userId);
         this.login = login;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.registered = registered;
-        this.role = role;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+        this.roles = roles;
     }
 
     public String getLogin() {
@@ -135,11 +143,11 @@ public class User {
         this.accountList = accountList;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

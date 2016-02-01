@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 //TODO create index
-@Table(name = "account_histories", uniqueConstraints = {@UniqueConstraint(columnNames = "", name = "")})
+@Table(name = "account_histories", uniqueConstraints =
+        {@UniqueConstraint(columnNames = {"from_account_id","to_account_id"}, name = "histories_userId_accountId_idx")}
+)
 public class AccountHistory {
     @Id
     @SequenceGenerator(name = "account_history_seq", sequenceName = "account_history_seq", allocationSize = 1)
@@ -78,6 +80,9 @@ public class AccountHistory {
     @Column(name = "amount_after_operation_in_recipient", nullable = false)
     @NotEmpty
     private BigDecimal amountAfterOperationInRecipient;
+
+    public AccountHistory(){
+    }
 
     public AccountHistory(int operationId,
                           int fromUserId, int toUserId,

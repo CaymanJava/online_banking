@@ -7,8 +7,8 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2><a href="">Home</a></h2>
-    <h3><fmt:message key="meals.edit"/></h3>
-    <hr>
+    <h3>Account Edit</h3>
+    <%--<hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.UserMeal" scope="request"/>
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
@@ -26,7 +26,7 @@
         </dl>
         <button type="submit">Save</button>
         <button onclick="window.history.back()">Cancel</button>
-    </form>
+    </form>--%>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

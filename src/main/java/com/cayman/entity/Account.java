@@ -8,14 +8,9 @@ import java.math.BigDecimal;
 
 @Entity
 //TODO create index for DB
-@Table(name = "accounts", uniqueConstraints = {@UniqueConstraint(columnNames = "", name = "")})
-public class Account {
+@Table(name = "accounts", uniqueConstraints = {@UniqueConstraint(columnNames = "account_number", name = "account_number_idx")})
+public class Account extends BaseEntity {
     //public static final int START_SEQ = 1;
-
-    @Id
-    @SequenceGenerator(name = "account_seq", sequenceName = "account_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
-    private int accountId;
 
     @Column(name = "name", nullable = true)
     @NotEmpty
@@ -38,7 +33,7 @@ public class Account {
     private User user;
 
     public Account(int accountId, String name, String accountNumber, Currency currency, BigDecimal amount) {
-        this.accountId = accountId;
+        super(accountId);
         this.name = name;
         this.accountNumber = accountNumber;
         this.currency = currency;
@@ -46,14 +41,6 @@ public class Account {
     }
 
     public Account(){
-    }
-
-    public int getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
+<%--<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -9,8 +9,8 @@
 <section>
     <%--http://stackoverflow.com/questions/10327390/how-should-i-get-root-folder-path-in-jsp-page--%>
     <h3><a href="${pageContext.request.contextPath}">Home</a></h3>
-    <h3><fmt:message key="meals.title"/></h3>
-    <form method="post" action="meals/filter">
+    <h3>Accounts</h3>
+    <%--&lt;%&ndash;<form method="post" action="meals/filter">
         <dl>
             <dt>From Date:</dt>
             <dd><input type="date" name="startDate" value="${startDate}"></dd>
@@ -46,8 +46,8 @@
             <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.UserMealWithExceed"/>
             <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
                 <td>
-                   <%--<fmt:parseDate value="${meal.dateTime}" pattern="y-M-dd'T'H:m" var="parsedDate"/>--%>
-                   <%--<fmt:formatDate value="${parsedDate}" pattern="yyyy.MM.dd HH:mm" />--%>
+                   &lt;%&ndash;<fmt:parseDate value="${meal.dateTime}" pattern="y-M-dd'T'H:m" var="parsedDate"/>&ndash;%&gt;
+                   &lt;%&ndash;<fmt:formatDate value="${parsedDate}" pattern="yyyy.MM.dd HH:mm" />&ndash;%&gt;
                     <%=TimeUtil.toString(meal.getDateTime())%>
                 </td>
                 <td>${meal.description}</td>
@@ -55,8 +55,8 @@
                 <td><a href="meals/update?id=${meal.id}">Update</a></td>
                 <td><a href="meals/delete?id=${meal.id}">Delete</a></td>
             </tr>
-        </c:forEach>
-    </table>
+        </c:forEach>&ndash;%&gt;
+    </table>--%>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

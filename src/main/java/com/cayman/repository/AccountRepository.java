@@ -13,7 +13,9 @@ public interface AccountRepository {
     boolean delete(int userId, int accountId);
     boolean sendMoney(Account fromAccount, Account toAccount,
                       BigDecimal amountInSenderCurrency, BigDecimal amountInRecipientCurrency);
+
     Account getAccountByAccountNumber(String accountNumber);
     int getUserIdByAccountId(int accountId);
-    boolean checkAccountId(int accountId);
+    boolean isAccountAvailable(int accountId);
+    boolean isEnoughMoneyInAccount(int accountId);
 }

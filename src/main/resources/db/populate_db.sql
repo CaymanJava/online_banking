@@ -2,9 +2,7 @@ DELETE FROM users;
 DELETE FROM accounts;
 DELETE FROM account_histories;
 DELETE FROM roles;
-ALTER SEQUENCE user_seq RESTART WITH 1;
-ALTER SEQUENCE account_seq RESTART WITH 1;
-ALTER SEQUENCE account_history_seq RESTART WITH 1;
+ALTER SEQUENCE global_seq RESTART WITH 1;
 
 INSERT INTO users (login, password, first_name, last_name, email) VALUES
   ('adminLogin', 'password', 'Dima', 'Bosenko', 'dima_boss@mail.ru'),

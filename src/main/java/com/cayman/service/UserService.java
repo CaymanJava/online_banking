@@ -1,7 +1,15 @@
 package com.cayman.service;
 
-/**
- * Created by macuser on 31.01.16.
- */
+import com.cayman.entity.User;
+
+import java.util.List;
+
+
 public interface UserService {
+    User get(int userId);
+    User save(User user);
+    void update(User user);
+    void delete(int userId);
+    List<User> getAll();
+    User getByEmail(String email);
 }

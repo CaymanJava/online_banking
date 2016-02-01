@@ -8,26 +8,33 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <section>
-    <h3><fmt:message key="users.title"/></h3>
+    <h3>UserList</h3>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Roles</th>
+            <th>id</th>
+            <th>login</th>
+            <th>password</th>
+            <th>firstName</th>
+            <th>lastName</th>
+            <th>email</th>
+            <th>registered</th>
             <th>Active</th>
-            <th>Registered</th>
+            <th>Roles</th>
         </tr>
         </thead>
         <c:forEach items="${userList}" var="user">
-            <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.model.User"/>
+            <jsp:useBean id="user" scope="page" type="com.cayman.entity.User"/>
             <tr>
-                <td><c:out value="${user.name}"/></td>
+                <td><c:out value="${user.id}"/></td>
+                <td><c:out value="${user.login}"/></td>
+                <td><c:out value="${user.password}"/></td>
+                <td><c:out value="${user.firstName}"/></td>
+                <td><c:out value="${user.lastName}"/></td>
                 <td><a href="mailto:${user.email}">${user.email}</a></td>
-                <td>${user.roles}</td>
-                <td><%=user.isEnabled()%>
-                </td>
                 <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>
+                <td><%=user.isEnabled()%>
+                <td>${user.roles}</td>
             </tr>
         </c:forEach>
     </table>
