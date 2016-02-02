@@ -9,7 +9,7 @@ INSERT INTO users (login, password, first_name, last_name, email) VALUES
   ('userLogin1', 'password2', 'Nastya', 'Bosenko', 'nastya_boss@mail.ru'),
   ('userLogin2', 'password3', 'Vasya', 'Pupkin', '2e14s@mail.ru');
 
-INSERT INTO accounts(name, account_number, currency, amount, user_id) VALUES
+INSERT INTO accounts(name, account_number, currency, balance, user_id) VALUES
   ('USD_account', '20200000000000000011', 'USD', 10000, 1),
   ('PLN_account', '40400000000000000012', 'PLN', 20.88, 1),
   ('UAH_account', '10100000000000000013', 'UAH', 2000, 1),

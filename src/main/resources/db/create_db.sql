@@ -56,8 +56,10 @@ CREATE TABLE accounts
   name VARCHAR(255) NOT NULL,
   account_number VARCHAR(255) NOT NULL,
   currency VARCHAR(3),
-  amount DECIMAL(20,2) NOT NULL,
+  balance DECIMAL(20,2) NOT NULL,
   user_id INTEGER NOT NULL,
+  enabled BOOLEAN DEFAULT TRUE,
+  UNIQUE (account_number),
   FOREIGN KEY ( user_id ) REFERENCES USERS ( id ) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX account_number_idx ON accounts(account_number);

@@ -31,4 +31,9 @@ public class CurrencyConverter {
         } catch (IOException ignored){}
         return result;
     }
+
+    public static BigDecimal convertMoney(Currency senderCurrency, Currency recipientCurrency, BigDecimal amount) {
+        BigDecimal euro = buyEuro(senderCurrency, amount);
+        return sellEuro(recipientCurrency, euro);
+    }
 }

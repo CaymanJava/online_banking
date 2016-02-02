@@ -4,13 +4,13 @@ package com.cayman.web;
 import com.cayman.entity.BaseEntity;
 
 public class LoggedUser {
-    public static int userId = BaseEntity.START_SEQ;
+    private static int userId = BaseEntity.START_SEQ;
 
     public static int id() {
         return userId;
     }
 
     public static void setId(int id) {
-        LoggedUser.userId = userId;
+        LoggedUser.userId = id;
     }
 }

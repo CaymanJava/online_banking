@@ -32,6 +32,7 @@
           <factory-entry name="entityManagerFactory" value="50b7916e-0d50-43bf-afd9-266f5922b2ec" />
           <factory-entry name="item-manager-pu" value="50b7916e-0d50-43bf-afd9-266f5922b2ec" />
           <factory-entry name="jpaData" value="50b7916e-0d50-43bf-afd9-266f5922b2ec" />
+          <factory-entry name="jpaProperties" />
         </datasource-mapping>
         <deploymentDescriptor name="orm.xml" url="file://$MODULE_DIR$/META-INF/orm.xml" />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/META-INF/persistence.xml" />
