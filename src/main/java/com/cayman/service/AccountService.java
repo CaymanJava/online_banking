@@ -27,4 +27,5 @@ public interface AccountService {
     void payCommission(BigDecimal commissionAmount, Currency currency);
     TransactionTransferObject getTransactionInformation(int userId, int accountId,
                                                         String recipientAccountNumber, BigDecimal amount);
+    void createNumberForNewAccount(int userId);
 }

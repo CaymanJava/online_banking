@@ -30,7 +30,7 @@
         <button type="submit">Filter</button>
     </form>--%>
     <hr>
-    <a href="accounts/create">Add Account</a>
+    <a href="accounts/create">Add account</a>
     <hr>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -39,7 +39,6 @@
             <th>Account Number</th>
             <th>Balance</th>
             <th>Currency</th>
-            <th></th>
             <th></th>
         </tr>
         </thead>
@@ -56,7 +55,6 @@
                 <td>${account.balance}</td>
                 <td>${account.currency}</td>
                 <td><a href="accounts/update?id=${account.id}">Update</a></td>
-                <td><a href="accounts/delete?id=${account.id}">Delete</a></td>
             <%--</tr>--%>
                 </tr>
         </c:forEach>

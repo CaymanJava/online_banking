@@ -7,7 +7,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2><a href="">Home</a></h2>
-    <h3>Account Edit</h3>
+    <h3>Account Create</h3>
     <hr>
     <jsp:useBean id="account" type="com.cayman.entity.Account" scope="request"/>
     <form method="post" action="accounts">
@@ -19,18 +19,20 @@
         </dl>
         <dl>
             <dt>Currency:</dt>
-            <dd><c:out value="${account.currency}"/></dd>
+            <dd><select name="currency">
+                <option value="EUR" selected>EUR</option>
+                <option value="USD">USD</option>
+                <option value="PLN">PLN</option>
+                <option value="UAH">UAH</option>
+                <option value="RUB">RUB</option>
+            </select></dd>
         </dl>
-        <input type="hidden" name="currency" value="${account.currency}">
+        <input type="hidden" name="balance" value="${account.balance}">
         <dl>
             <dt>Balance:</dt>
             <dd><c:out value="${account.balance}"/></dd>
         </dl>
-        <input type="hidden" name="balance" value="${account.balance}">
 
-        <dl>
-            <a href="accounts/update/delete?id=${account.id}">Delete</a>
-        </dl>
 
         <button type="submit">Save</button>
         <button onclick="window.history.back()">Cancel</button>

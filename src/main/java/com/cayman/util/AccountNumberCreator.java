@@ -55,18 +55,6 @@ public class AccountNumberCreator {
     }
 
     public static void main(String[] args) {
-        System.out.println(createAccountNumber(1, 1, Currency.USD));
-        System.out.println(createAccountNumber(1, 2, Currency.PLN));
-        System.out.println(createAccountNumber(1, 3, Currency.UAH));
-        System.out.println(createAccountNumber(1, 4, Currency.EUR));
-        System.out.println(createAccountNumber(1, 5, Currency.RUB));
-
-        System.out.println(createAccountNumber(2, 6, Currency.RUB));
-        System.out.println(createAccountNumber(2, 7, Currency.UAH));
-
-        System.out.println(createAccountNumber(3, 8, Currency.USD));
-        System.out.println(createAccountNumber(3, 9, Currency.EUR));
-
-
+        System.out.println(Currency.valueOf("USD"));
     }
 }

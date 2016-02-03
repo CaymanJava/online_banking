@@ -14,4 +14,5 @@ public interface AccountRepository {
     Account save(Account account, int userId);
     boolean delete(int userId, int accountId);
     Account getAccountByAccountNumber(String accountNumber);
+    Account getAccountByDefaultNumberAndUserId(int userId);
 }

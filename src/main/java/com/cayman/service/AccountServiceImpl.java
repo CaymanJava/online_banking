@@ -5,6 +5,7 @@ import com.cayman.entity.Account;
 import com.cayman.entity.Currency;
 import com.cayman.repository.AccountHistoryRepository;
 import com.cayman.repository.AccountRepository;
+import com.cayman.util.AccountNumberCreator;
 import com.cayman.util.AccountUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account save(Account account, int userId) {
-        return repository.save(account, userId);
+        Account createdAccount = repository.save(account, userId);
+        createNumberForNewAccount(userId);
+        return createdAccount;
     }
 
     @Override
@@ -107,5 +110,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public TransactionTransferObject getTransactionInformation(int userId, int accountId, String recipientAccountNumber, BigDecimal amount) {
         return null;
+    }
+
+    @Override
+    public void createNumberForNewAccount(int userId) {
+        Account account = repository.getAccountByDefaultNumberAndUserId(userId);
+        account.setAccountNumber(AccountNumberCreator.createAccountNumber(userId, account.getId(), account.getCurrency()));
+        repository.save(account, userId);
     }
 }

@@ -69,4 +69,8 @@ public class AccountUtil {
     public static BigDecimal createBigDecimal(double value) {
         return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
+
+    public static BigDecimal createBigDecimal(float value) {
+        return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
 }

@@ -22,6 +22,7 @@
         <jdbc:script encoding="utf-8" location="classpath:db/populate_db.sql"/>
     </jdbc:initialize-database>
 
+
     <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value = "org.hsqldb.jdbcDriver"/>

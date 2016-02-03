@@ -14,10 +14,28 @@ public abstract class AbstractAccountController {
     @Autowired
     protected AccountService accountService;
 
+    public Account get(int id) {
+        int userId = LoggedUser.id();
+        return accountService.get(userId, id);
+    }
+
     public List<Account> getAll() {
         int userId = LoggedUser.id();
         return accountService.getAll(userId);
     }
 
+    public Account create(Account account){
+        int id = LoggedUser.id();
+        return accountService.save(account, id);
+    }
 
+    public Account update(Account account) {
+        int id = LoggedUser.id();
+        return accountService.update(account, id);
+    }
+
+    public void delete(int id) {
+        int userId = LoggedUser.id();
+        accountService.delete(userId, id);
+    }
 }
