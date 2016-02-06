@@ -24,7 +24,7 @@ public class CurrencyConverter {
     }
 
     public static BigDecimal sellEuro(Currency recipientCurrency, BigDecimal amount){
-        return amount.multiply(new BigDecimal(getExchangeRate(recipientCurrency)));
+        return amount.multiply(new BigDecimal(getExchangeRate(recipientCurrency))).setScale(2, BigDecimal.ROUND_DOWN);
     }
 
     public static double getExchangeRate(Currency currency) {

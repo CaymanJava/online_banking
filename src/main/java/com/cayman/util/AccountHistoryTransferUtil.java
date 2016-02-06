@@ -20,7 +20,9 @@ public class AccountHistoryTransferUtil {
                 history.getSenderCurrency(),
                 history.getFromAccountNumber(), history.getToAccountNumber(),
                 history.getComment(),
-                history.getSenderAmount(), history.getAmountAfterOperationOnSender(), history.getCommission(),
+                AccountUtil.createBigDecimal(history.getSenderAmount()),
+                AccountUtil.createBigDecimal(history.getAmountAfterOperationOnSender()),
+                AccountUtil.createBigDecimal(history.getCommission()),
                 history.getFromUserId(), history.getFromAccountId()
         );
     }
@@ -32,7 +34,8 @@ public class AccountHistoryTransferUtil {
                 history.getRecipientCurrency(),
                 history.getToAccountNumber(), history.getFromAccountNumber(),
                 history.getComment(),
-                history.getRecipientAmount(), history.getAmountAfterOperationInRecipient(), Account.ZERO_BALANCE,
+                AccountUtil.createBigDecimal(history.getRecipientAmount()),
+                AccountUtil.createBigDecimal(history.getAmountAfterOperationInRecipient()), Account.ZERO_BALANCE,
                 history.getToUserId(), history.getToAccountId()
         );
     }

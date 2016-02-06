@@ -10,6 +10,8 @@
     <h3>Account Edit</h3>
     <hr>
     <jsp:useBean id="account" type="com.cayman.entity.Account" scope="request"/>
+
+
     <form method="post" action="accounts">
 
       <%--  <dl>
@@ -23,20 +25,26 @@
         <dl>
             <a href="accounts/getForSend?id=${account.id}">Send Money</a>
         </dl>--%>
-          <a href="accounts/update/delete?id=${account.id}">Delete</a>
+          <a href="accounts/menu/delete?id=${account.id}">Delete</a>
           <a href="accounts/getForAdding?id=${account.id}">Put Money</a>
           <a href="accounts/getForSend?id=${account.id}">Send Money</a>
 
         <input type="hidden" name="id" value="${account.id}">
         <input type="hidden" name="accountNumber" value="${account.accountNumber}">
-        <dl>
-            <dt>Name:</dt>
-            <dd><input type="text" value="${account.name}" name="name"></dd>
-        </dl>
-        <dl>
-            <dt>Currency:</dt>
-            <dd><c:out value="${account.currency}"/></dd>
-        </dl>
+          <dl>
+              <dt>Status:</dt>
+              <dd class="${account.enable ? 'enable' : 'disable'}"><c:out value="${account.enable ? 'active' : 'blocked'}"/></dd>
+          </dl>
+
+          <dl>
+              <dt>Name:</dt>
+              <dd><input type="text" value="${account.name}" name="name"></dd>
+          </dl>
+          <dl>
+
+              <dt>Currency:</dt>
+              <dd><c:out value="${account.currency}"/></dd>
+          </dl>
         <input type="hidden" name="currency" value="${account.currency}">
         <dl>
             <dt>Balance:</dt>
@@ -45,7 +53,6 @@
         <input type="hidden" name="balance" value="${account.balance}">
 
         <button type="submit">Save</button>
-        <%--<button onclick="window.history.back()">Cancel</button>--%>
         <input action="action" type="button" value="Cancel" onclick="history.go(-1);" />
     </form>
 </section>

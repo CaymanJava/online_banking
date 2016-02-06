@@ -19,8 +19,8 @@ public interface AccountService {
                    Currency senderCurrency, String comment,
                    BigDecimal amountSender, BigDecimal commission, BigDecimal amountRecipient);
     Account getAccountByAccountNumber(String accountNumber);
-    boolean isAccountAvailable(String accountNumber);
-    boolean isEnoughMoneyInAccount(int userId, int accountId, BigDecimal amount);
+    void checkingAccountExistence(String accountNumber);
+    void checkingAccountBalance(int userId, int accountId, BigDecimal amount);
     Account putMoneyIntoAccount(int userId, int accountId, BigDecimal amount);
     Account putMoneyFromOutside(int userId, int accountId, BigDecimal amount);
     Account withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount);

@@ -16,7 +16,7 @@ CREATE TABLE users
   last_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   registered TIMESTAMP DEFAULT now(),
-  enabled BOOLEAN DEFAULT TRUE
+  enabled BOOLEAN NOT NULL
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON USERS ( email );
 
@@ -34,11 +34,11 @@ CREATE TABLE account_histories
   from_account_number VARCHAR(255) NOT NULL,
   to_account_number VARCHAR(255) NOT NULL,
   comment VARCHAR(255) NOT NULL ,
-  sender_amount DECIMAL NOT NULL,
-  recipient_amount DECIMAL NOT NULL,
-  commission DECIMAL NOT NULL,
-  amount_after_operation_on_sender DECIMAL NOT NULL,
-  amount_after_operation_in_recipient DECIMAL NOT NULL
+  sender_amount DECIMAL(20,2) NOT NULL,
+  recipient_amount DECIMAL(20,2) NOT NULL,
+  commission DECIMAL(20,2) NOT NULL,
+  amount_after_operation_on_sender DECIMAL(20,2) NOT NULL,
+  amount_after_operation_in_recipient DECIMAL(20,2) NOT NULL
 );
 
 CREATE TABLE roles

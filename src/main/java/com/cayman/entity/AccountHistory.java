@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
                 "WHERE ah.fromUserId = :fromUserId OR ah.toUserId = :toUserId " +
                 "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
         @NamedQuery(name = AccountHistory.GET_ALL_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
-                "WHERE (ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +
-                "OR (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId)" +
+                "WHERE ((ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +
+                "OR (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId))" +
                 "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
         @NamedQuery(name = AccountHistory.GET_CREDIT_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
                 "WHERE (ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +

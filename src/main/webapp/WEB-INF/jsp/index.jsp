@@ -6,7 +6,10 @@
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
-<section>
+<ul>
+<li><a href="admin">Admin Panel</a></li>
+</ul>
+    <section>
     <form method="post" action="users">
     login:
         <select name="userId">

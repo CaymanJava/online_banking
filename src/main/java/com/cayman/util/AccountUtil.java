@@ -27,13 +27,6 @@ public class AccountUtil {
     private AccountUtil(){
     }
 
-    public static boolean checkBalance(BigDecimal balance, BigDecimal amount) {
-        if (balance.compareTo(amount) >= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     // 0 - amount after taking commission
     // 1 - commission amount
@@ -78,7 +71,8 @@ public class AccountUtil {
         return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    public static BigDecimal createBigDecimal(float value) {
-        return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal createBigDecimal(BigDecimal value) {
+        return value.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
+
 }

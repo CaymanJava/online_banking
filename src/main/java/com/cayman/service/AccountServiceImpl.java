@@ -3,13 +3,12 @@ package com.cayman.service;
 import com.cayman.dto.TransactionTransferObject;
 import com.cayman.entity.Account;
 import com.cayman.entity.Currency;
-import com.cayman.repository.AccountHistoryRepository;
 import com.cayman.repository.AccountRepository;
 import com.cayman.util.AccountNumberCreator;
 import com.cayman.util.AccountUtil;
 import com.cayman.util.CurrencyConverter;
-import com.cayman.util.exceptions.NotAvailableAccountException;
-import com.cayman.util.exceptions.NotEnoughMoneyInTheAccountException;
+import com.cayman.util.exceptions.ExceptionUtils;
+import com.cayman.util.exceptions.NotFoundEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +55,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public boolean delete(int userId, int accountId) {
+        Account account = get(userId, accountId);
+        ExceptionUtils.checkForZeroBalance(get(userId, accountId));
         return accountRepository.delete(userId, accountId);
     }
 
@@ -84,25 +85,25 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean isAccountAvailable(String accountNumber) {
-        Account accountByAccountNumber;
+    public void checkingAccountExistence(String accountNumber) {
         try {
-             accountByAccountNumber = getAccountByAccountNumber(accountNumber);
+             getAccountByAccountNumber(accountNumber);
         } catch(NoResultException e) {
-            return false;
+            throw new NotFoundEntityException();
         }
-        return accountByAccountNumber.isEnable();
+
     }
 
     @Override
-    public boolean isEnoughMoneyInAccount(int userId, int accountId, BigDecimal amount) {
-        return AccountUtil.checkBalance(get(userId, accountId).getBalance(), amount);
+    public void checkingAccountBalance(int userId, int accountId, BigDecimal amount) {
+         ExceptionUtils.checkBalance(get(userId, accountId).getBalance(), amount);
     }
 
     @Override
     @Transactional
     public Account putMoneyIntoAccount(int userId, int accountId, BigDecimal amount) {
         Account account = get(userId, accountId);
+        ExceptionUtils.checkAccountForBlocking(account);
         account.setBalance(AccountUtil.addMoney(account.getBalance(), amount));
         return save(account, userId);
     }
@@ -111,6 +112,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Account putMoneyFromOutside(int userId, int accountId, BigDecimal amount) {
+        ExceptionUtils.checkForNegativeAndZeroAmount(amount);
         Account account = putMoneyIntoAccount(userId, accountId, amount);
         historyService.saveAddedMoney(account,amount);
         return account;
@@ -119,6 +121,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount) {
         Account account = get(userId, accountId);
+        ExceptionUtils.checkAccountForBlocking(account);
         account.setBalance(AccountUtil.withdrawMoney(account.getBalance(), amount));
         return save(account, userId);
     }
@@ -133,15 +136,14 @@ public class AccountServiceImpl implements AccountService {
 
     public TransactionTransferObject getTransactionInformation(int userId, int accountId, String comment,
                                                                String recipientAccountNumber, BigDecimal amount) {
-        if (!isEnoughMoneyInAccount(userId, accountId, amount)){
-            throw new NotEnoughMoneyInTheAccountException();
-        }
-        if (!isAccountAvailable(recipientAccountNumber)) {
-            throw new NotAvailableAccountException();
-        }
+        checkingAccountExistence(recipientAccountNumber);
+        checkingAccountBalance(userId, accountId, amount);
 
         Account sender = get(userId, accountId);
         Account recipient = getAccountByAccountNumber(recipientAccountNumber);
+
+        ExceptionUtils.checkAccountForBlocking(sender);
+        ExceptionUtils.checkAccountForBlocking(recipient);
 
         Currency senderCurrency = sender.getCurrency();
         Currency recipientCurrency = recipient.getCurrency();

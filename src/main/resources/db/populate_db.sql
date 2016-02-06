@@ -4,10 +4,10 @@ DELETE FROM account_histories;
 DELETE FROM roles;
 ALTER SEQUENCE global_seq RESTART WITH 1;
 
-INSERT INTO users (login, password, first_name, last_name, email) VALUES
-  ('adminLogin', 'password', 'Dima', 'Bosenko', 'dima_boss@mail.ru'),
-  ('userLogin1', 'password2', 'Nastya', 'Bosenko', 'nastya_boss@mail.ru'),
-  ('userLogin2', 'password3', 'Vasya', 'Pupkin', '2e14s@mail.ru');
+INSERT INTO users (login, password, first_name, last_name, email, enabled) VALUES
+  ('adminLogin', 'password', 'Dima', 'Bosenko', 'dima_boss@mail.ru', true),
+  ('userLogin1', 'password2', 'Nastya', 'Bosenko', 'nastya_boss@mail.ru', true),
+  ('userLogin2', 'password3', 'Vasya', 'Pupkin', '2e14s@mail.ru', true);
 
 INSERT INTO accounts(name, account_number, currency, balance, user_id) VALUES
   ('USD_account', '20200000000000000011', 'USD', 0, 1),
@@ -23,4 +23,5 @@ INSERT INTO accounts(name, account_number, currency, balance, user_id) VALUES
 INSERT INTO roles (user_id, role) VALUES
   (1, 'ROLE_ADMIN'),
   (2, 'ROLE_USER'),
+  (3, 'ROLE_USER'),
   (3, 'ROLE_ADMIN');

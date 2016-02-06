@@ -5,15 +5,13 @@ import com.cayman.entity.Account;
 import com.cayman.entity.Currency;
 import com.cayman.util.AccountUtil;
 import com.cayman.util.TimeUtil;
-import com.cayman.util.exceptions.NotAvailableAccountException;
-import com.cayman.util.exceptions.NotEnoughMoneyInTheAccountException;
+import com.cayman.util.exceptions.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -28,7 +26,7 @@ public class JspAccountController extends AbstractAccountController {
         return "accountList";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String editForUpdate(HttpServletRequest request, Model model){
         model.addAttribute("account", super.get(getId(request)));
         return "accountEdit";
@@ -58,17 +56,14 @@ public class JspAccountController extends AbstractAccountController {
         return "redirect:/accounts";
     }
 
-    @RequestMapping(value = "update/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "menu/delete", method = RequestMethod.GET)
     public String delete(HttpServletRequest request){
-        int id = getId(request);
-        BigDecimal balance = get(id).getBalance();
-        if (balance.compareTo(Account.ZERO_BALANCE) == 0) {
-            super.delete(id);
-            return "redirect:/accounts";
+        try {
+            super.delete(getId(request));
+        } catch (CannotDeleteEntityException e) {
+            return "errors/cannotDeleteAccount";
         }
-        else {
-            return "errors/cannotDelete";
-        }
+        return "redirect:/accounts";
     }
 
     /*@RequestMapping(value = "/putMoney", method = RequestMethod.POST)
@@ -92,7 +87,15 @@ public class JspAccountController extends AbstractAccountController {
 
     @RequestMapping(value= "/putMoney", method = RequestMethod.POST)
     public String putMoneyIntoAccount(HttpServletRequest request){
-        super.putMoney(getId(request), AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("value"))));
+        try {
+            super.putMoney(getId(request), AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("value"))));
+        } catch (NotAvailableAccountException e) {
+            return "errors/accountIsBlocked";
+        } catch (IncorrectAmountException e) {
+            return "errors/incorrectTransferAmount";
+        } catch (NumberFormatException e) {
+            return "errors/incorrectTransferAmount";
+        }
         return "redirect:/accounts";
     }
 
@@ -105,10 +108,16 @@ public class JspAccountController extends AbstractAccountController {
                     request.getParameter("accountNumber"),
                     request.getParameter("comment"),
                     AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("value"))));
-        } catch (NotAvailableAccountException e){
-            return "errors/accountIsNotAvailable";
+        } catch (NotFoundEntityException e){
+            return "errors/accountIsNotExist";
         } catch (NotEnoughMoneyInTheAccountException e){
             return "errors/notEnoughMoney";
+        } catch (NotAvailableAccountException e) {
+            return "errors/accountIsBlocked";
+        } catch (IncorrectAmountException e) {
+            return "errors/incorrectTransferAmount";
+        } catch (NumberFormatException e) {
+            return "errors/incorrectTransferAmount";
         }
         model.addAttribute("dto", dto);
         return "transactionInformation";
@@ -116,29 +125,35 @@ public class JspAccountController extends AbstractAccountController {
 
     @RequestMapping(value = "/sendMoney", method = RequestMethod.POST)
     public String sendMoney(HttpServletRequest request){
-        super.sendMoney(
-                Integer.parseInt(request.getParameter("senderId")),
-                Integer.parseInt(request.getParameter("senderAccountId")),
-                Integer.parseInt(request.getParameter("recipientId")),
-                Integer.parseInt(request.getParameter("recipientAccountId")),
-                Currency.valueOf(request.getParameter("commissionCurrency")),
-                request.getParameter("comment"),
-                AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("transferAmount"))),
-                AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("commission"))),
-                AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("amountForReceive"))));
+        try {
+            super.sendMoney(
+                    Integer.parseInt(request.getParameter("senderId")),
+                    Integer.parseInt(request.getParameter("senderAccountId")),
+                    Integer.parseInt(request.getParameter("recipientId")),
+                    Integer.parseInt(request.getParameter("recipientAccountId")),
+                    Currency.valueOf(request.getParameter("commissionCurrency")),
+                    request.getParameter("comment"),
+                    AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("transferAmount"))),
+                    AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("commission"))),
+                    AccountUtil.createBigDecimal(Double.parseDouble(request.getParameter("amountForReceive"))));
+        } catch (NotAvailableAccountException e) {
+            return "errors/accountIsBlocked";
+        }
         return "redirect:/accounts";
     }
 
     @RequestMapping(value = "/history", method = RequestMethod.GET)
     public String getAccountHistory(HttpServletRequest request, Model model) {
-        model.addAttribute("accountHistory", super.getAccountHistory(getId(request)));
+        int id = getId(request);
+        model.addAttribute("accountHistory", super.getAccountHistory(id));
+        model.addAttribute("id", id);
         return "accountHistory";
     }
 
     @RequestMapping(value = "/history/filter", method = RequestMethod.POST)
     public String getFilteredHistory(HttpServletRequest request, Model model) {
-        LocalDate startDate = TimeUtil.parseLocalDate(resetParam("startDate", request), LocalDate.MIN);
-        LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request), LocalDate.MAX);
+        LocalDate startDate = TimeUtil.parseLocalDate(resetParam("startDate", request), TimeUtil.MIN_DATE);
+        LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request), TimeUtil.MAX_DATE);
         LocalTime startTime = TimeUtil.parseLocalTime(resetParam("startTime", request), LocalTime.MIN);
         LocalTime endTime = TimeUtil.parseLocalTime(resetParam("endTime", request), LocalTime.MAX);
         String option = request.getParameter("option");
@@ -147,6 +162,7 @@ public class JspAccountController extends AbstractAccountController {
                 startDate, startTime,
                 endDate, endTime,
                 accountId, option));
+        model.addAttribute("id", accountId);
         return "accountHistory";
     }
 

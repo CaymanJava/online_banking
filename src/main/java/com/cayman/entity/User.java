@@ -1,8 +1,11 @@
 package com.cayman.entity;
 
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -53,10 +56,7 @@ public class User extends BaseEntity {
 
     @Column(name = "enabled", nullable = false)
     @NotEmpty
-    private boolean enabled = true;
-
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Account> accountList;
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -64,11 +64,14 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Account> accounts;
+
     public User() {
     }
 
     public User(Integer userId, String login, String password, String firstName,
-                String lastName, String email, Date registered, Set<Role> roles) {
+                String lastName, String email, Date registered, boolean enabled, Set<Role> roles) {
         super(userId);
         this.login = login;
         this.password = password;
@@ -76,6 +79,7 @@ public class User extends BaseEntity {
         this.lastName = lastName;
         this.email = email;
         this.registered = registered;
+        this.enabled = enabled;
         this.roles = roles;
     }
 
@@ -135,19 +139,19 @@ public class User extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

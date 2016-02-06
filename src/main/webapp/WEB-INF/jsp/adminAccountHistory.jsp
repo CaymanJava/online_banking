@@ -10,8 +10,9 @@
     <%--http://stackoverflow.com/questions/10327390/how-should-i-get-root-folder-path-in-jsp-page--%>
     <h3><a href="${pageContext.request.contextPath}">Home</a></h3>
     <h3>AccountHistory</h3>
-        <form method="post" action="/accounts/history/filter">
-            <input type="hidden" name="id" value="${id}">
+    <form method="post" action="admin/users/settings/history/filter">
+        <input type="hidden" name="userId" value="${userId}">
+        <input type="hidden" name="accountId" value="${accountId}">
         <dl>
             <dt>From Date:</dt>
             <dd><input type="date" name="startDate" value=""></dd>
@@ -36,7 +37,7 @@
         </select>
         <button type="submit">Filter</button>
     </form>
-        <hr>
+    <hr>
     <table align="center" border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
@@ -65,7 +66,7 @@
         </c:forEach>
         <input action="action" type="button" value="Back" onclick="history.go(-1);" />
     </table>
-        <%--</form>--%>
+    <%--</form>--%>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

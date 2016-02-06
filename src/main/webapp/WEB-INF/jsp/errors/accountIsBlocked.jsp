@@ -7,7 +7,7 @@
 <section>
     <%--http://stackoverflow.com/questions/10327390/how-should-i-get-root-folder-path-in-jsp-page--%>
     <h3><a href="${pageContext.request.contextPath}">Home</a></h3>
-    <b>Chosen account is not available or not exist</b>
+    <b>Account is blocked</b>
     <br/><button onclick="window.history.back()">Cancel</button>
 </section>
 

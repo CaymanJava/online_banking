@@ -19,12 +19,6 @@ public class RootController {
         return "index";
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String userList(Model model) {
-        model.addAttribute("userList", userService.getAll());
-        return "userList";
-    }
-
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String setUser(HttpServletRequest request) {
         int userId = Integer.valueOf(request.getParameter("userId"));
