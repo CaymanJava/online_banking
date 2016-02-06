@@ -7,153 +7,178 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-//TODO create index
-@Table(name = "account_histories", uniqueConstraints =
-        {@UniqueConstraint(columnNames = {"from_account_id","to_account_id"}, name = "histories_userId_accountId_idx")}
-)
-public class AccountHistory {
-    @Id
-    @SequenceGenerator(name = "account_history_seq", sequenceName = "account_history_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_history_seq")
-    private int operationId;
 
-    @Column(name = "from_user_id", nullable = false)
-    @NotEmpty
-    private int fromUserId;
+@NamedQueries({
+        @NamedQuery(name = AccountHistory.GET_ALL_BY_USER_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE ah.fromUserId = :fromUserId OR ah.toUserId = :toUserId ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_ALL_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE (ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +
+                " OR (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId)" +
+                " ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_BY_ID, query = "SELECT ah FROM AccountHistory ah WHERE ah.id = :id"),
+        @NamedQuery(name = AccountHistory.GET_BETWEEN_BY_USER_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE ah.fromUserId = :fromUserId OR ah.toUserId = :toUserId " +
+                "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_ALL_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE (ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +
+                "OR (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId)" +
+                "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_CREDIT_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE (ah.fromAccountId = :fromAccountId AND ah.fromUserId = :fromUserId)" +
+                "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_DEBIT_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId)" +
+                "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
+})
+@Entity
+@Table(name = "account_histories")
+public class AccountHistory extends BaseEntity{
+    public final static String GET_ALL_BY_USER_ID = "AccountHistory.getAllByUserId";
+    public final static String GET_ALL_BY_ACCOUNT_ID = "AccountHistory.getAllByAccountId";
+    public final static String GET_BY_ID = "AccountHistory.getById";
+    public final static String GET_BETWEEN_BY_USER_ID = "AccountHistory.getBetweenByUserId";
+    public final static String GET_ALL_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getBetweenByAccountId";
+    public final static String GET_DEBIT_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getDebitBetweenByAccountId";
+    public final static String GET_CREDIT_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getCreditBetweenByAccountId";
+
+    @Column(name = "from_user_id")
+    private Integer fromUserId;
 
     @Column(name = "to_user_id", nullable = false)
-    @NotEmpty
-    private int toUserId;
+    @NotNull
+    private Integer toUserId;
 
-    @Column(name = "from_account_id", nullable = false)
-    @NotEmpty
-    private int fromAccountId;
+    @Column(name = "from_account_id")
+    private Integer fromAccountId;
 
     @Column(name = "to_account_id", nullable = false)
-    @NotEmpty
-    private int toAccountId;
+    @NotNull
+    private Integer toAccountId;
 
-    @Column(name = "operation_time", columnDefinition = "timestamp default now()")
-    private LocalDateTime operationTime;
+    @Column(name = "commission_account_id", nullable = false)
+    @NotNull
+    private Integer commissionAccountId;
+
+    @Column(name = "operation_time")
+    private LocalDateTime operationTime = LocalDateTime.now();
 
     @Column(name = "sender_currency", nullable = false)
-    @NotEmpty
+    @NotNull
     private Currency senderCurrency;
 
     @Column(name = "recipient_currency", nullable = false)
-    @NotEmpty
+    @NotNull
     private Currency recipientCurrency;
 
-    @Column(name = "credit", nullable = false)
-    @NotEmpty
-    private boolean credit = true;
-
-    @Column(name = "from_account_number", nullable = false)
-    @NotEmpty
-    private String fromAccountNumber;
+    @Column(name = "from_account_number")
+    private String fromAccountNumber = "";
 
     @Column(name = "to_account_number", nullable = false)
     @NotEmpty
     private String toAccountNumber;
 
-    @Column(name = "operation_amount", nullable = false)
-    @NotEmpty
-    private BigDecimal operationAmount;
+    @Column(name = "comment", nullable = false)
+    @NotNull
+    private String comment;
 
-    @Column(name = "commission", nullable = false)
-    @NotEmpty
+    @Column(name = "sender_amount", nullable = false)
+    @NotNull
+    private BigDecimal senderAmount;
+
+    @Column(name = "recipient_amount", nullable = false)
+    @NotNull
+    private BigDecimal recipientAmount;
+
+    @Column(name = "commission")
     private BigDecimal commission;
 
-    @Column(name = "amount_before_operation_on_sender", nullable = false)
-    @NotEmpty
-    private BigDecimal amountBeforeOperationOnSender;
-
-    @Column(name = "amount_after_operation_on_sender", nullable = false)
-    @NotEmpty
+    @Column(name = "amount_after_operation_on_sender")
     private BigDecimal amountAfterOperationOnSender;
 
-    @Column(name = "amount_before_operation_on_recipient", nullable = false)
-    @NotEmpty
-    private BigDecimal amountBeforeOperationOnRecipient;
-
     @Column(name = "amount_after_operation_in_recipient", nullable = false)
-    @NotEmpty
+    @NotNull
     private BigDecimal amountAfterOperationInRecipient;
 
     public AccountHistory(){
     }
 
-    public AccountHistory(int operationId,
-                          int fromUserId, int toUserId,
-                          int fromAccountId, int toAccountId,
-                          LocalDateTime operationTime,
-                          Currency senderCurrency,
-                          Currency recipientCurrency,
-                          boolean credit,
+    public AccountHistory(Integer fromUserId, Integer toUserId,
+                          Integer fromAccountId, Integer toAccountId,
+                          Integer commissionAccountId,
+                          Currency senderCurrency, Currency recipientCurrency,
                           String fromAccountNumber, String toAccountNumber,
-                          BigDecimal operationAmount,
+                          String comment,
+                          BigDecimal senderAmount,
+                          BigDecimal recipientAmount,
                           BigDecimal commission,
-                          BigDecimal amountBeforeOperationOnSender, BigDecimal amountAfterOperationOnSender,
-                          BigDecimal amountBeforeOperationOnRecipient, BigDecimal amountAfterOperationInRecipient) {
-        this.operationId = operationId;
+                          BigDecimal amountAfterOperationOnSender, BigDecimal amountAfterOperationInRecipient) {
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
-        this.operationTime = operationTime;
+        this.commissionAccountId = commissionAccountId;
         this.senderCurrency = senderCurrency;
         this.recipientCurrency = recipientCurrency;
-        this.credit = credit;
         this.fromAccountNumber = fromAccountNumber;
         this.toAccountNumber = toAccountNumber;
-        this.operationAmount = operationAmount;
+        this.comment = comment;
+        this.senderAmount = senderAmount;
+        this.recipientAmount = recipientAmount;
         this.commission = commission;
-        this.amountBeforeOperationOnSender = amountBeforeOperationOnSender;
         this.amountAfterOperationOnSender = amountAfterOperationOnSender;
-        this.amountBeforeOperationOnRecipient = amountBeforeOperationOnRecipient;
         this.amountAfterOperationInRecipient = amountAfterOperationInRecipient;
     }
 
-    public int getOperationId() {
-        return operationId;
+    public AccountHistory(Integer toUserId, Integer toAccountId,
+                          Currency senderCurrency,
+                          String toAccountNumber,
+                          BigDecimal senderAmount,
+                          BigDecimal amountAfterOperationInRecipient) {
+        this(Account.DEFAULT_ID, toUserId, Account.DEFAULT_ID, toAccountId, Account.DEFAULT_ID,
+                senderCurrency, senderCurrency, Account.EMPTY_STRING, toAccountNumber, Account.EMPTY_STRING,
+                senderAmount, senderAmount, Account.ZERO_BALANCE, Account.ZERO_BALANCE, amountAfterOperationInRecipient);
     }
 
-    public void setOperationId(int operationId) {
-        this.operationId = operationId;
-    }
-
-    public int getFromUserId() {
+    public Integer getFromUserId() {
         return fromUserId;
     }
 
-    public void setFromUserId(int fromUserId) {
+    public void setFromUserId(Integer fromUserId) {
         this.fromUserId = fromUserId;
     }
 
-    public int getToUserId() {
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getToUserId() {
         return toUserId;
     }
 
-    public void setToUserId(int toUserId) {
+    public void setToUserId(Integer toUserId) {
         this.toUserId = toUserId;
     }
 
-    public int getFromAccountId() {
+    public Integer getFromAccountId() {
         return fromAccountId;
     }
 
-    public void setFromAccountId(int fromAccountId) {
+    public void setFromAccountId(Integer fromAccountId) {
         this.fromAccountId = fromAccountId;
     }
 
-    public int getToAccountId() {
+    public Integer getToAccountId() {
         return toAccountId;
     }
 
-    public void setToAccountId(int toAccountId) {
+    public void setToAccountId(Integer toAccountId) {
         this.toAccountId = toAccountId;
     }
+
 
     public LocalDateTime getOperationTime() {
         return operationTime;
@@ -179,14 +204,6 @@ public class AccountHistory {
         this.recipientCurrency = recipientCurrency;
     }
 
-    public boolean isCredit() {
-        return credit;
-    }
-
-    public void setCredit(boolean credit) {
-        this.credit = credit;
-    }
-
     public String getFromAccountNumber() {
         return fromAccountNumber;
     }
@@ -203,12 +220,20 @@ public class AccountHistory {
         this.toAccountNumber = toAccountNumber;
     }
 
-    public BigDecimal getOperationAmount() {
-        return operationAmount;
+    public BigDecimal getSenderAmount() {
+        return senderAmount;
     }
 
-    public void setOperationAmount(BigDecimal operationAmount) {
-        this.operationAmount = operationAmount;
+    public void setSenderAmount(BigDecimal senderAmount) {
+        this.senderAmount = senderAmount;
+    }
+
+    public BigDecimal getRecipientAmount() {
+        return recipientAmount;
+    }
+
+    public void setRecipientAmount(BigDecimal recipientAmount) {
+        this.recipientAmount = recipientAmount;
     }
 
     public BigDecimal getCommission() {
@@ -219,14 +244,6 @@ public class AccountHistory {
         this.commission = commission;
     }
 
-    public BigDecimal getAmountBeforeOperationOnSender() {
-        return amountBeforeOperationOnSender;
-    }
-
-    public void setAmountBeforeOperationOnSender(BigDecimal amountBeforeOperationOnSender) {
-        this.amountBeforeOperationOnSender = amountBeforeOperationOnSender;
-    }
-
     public BigDecimal getAmountAfterOperationOnSender() {
         return amountAfterOperationOnSender;
     }
@@ -235,19 +252,19 @@ public class AccountHistory {
         this.amountAfterOperationOnSender = amountAfterOperationOnSender;
     }
 
-    public BigDecimal getAmountBeforeOperationOnRecipient() {
-        return amountBeforeOperationOnRecipient;
-    }
-
-    public void setAmountBeforeOperationOnRecipient(BigDecimal amountBeforeOperationOnRecipient) {
-        this.amountBeforeOperationOnRecipient = amountBeforeOperationOnRecipient;
-    }
-
     public BigDecimal getAmountAfterOperationInRecipient() {
         return amountAfterOperationInRecipient;
     }
 
     public void setAmountAfterOperationInRecipient(BigDecimal amountAfterOperationInRecipient) {
         this.amountAfterOperationInRecipient = amountAfterOperationInRecipient;
+    }
+
+    public Integer getCommissionAccountId() {
+        return commissionAccountId;
+    }
+
+    public void setCommissionAccountId(Integer commissionAccountId) {
+        this.commissionAccountId = commissionAccountId;
     }
 }

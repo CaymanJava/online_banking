@@ -11,6 +11,22 @@
     <hr>
     <jsp:useBean id="account" type="com.cayman.entity.Account" scope="request"/>
     <form method="post" action="accounts">
+
+      <%--  <dl>
+            <a href="accounts/update/delete?id=${account.id}">Delete</a>
+        </dl>
+
+        <dl>
+            <a href="accounts/getForAdding?id=${account.id}">Put Money</a>
+        </dl>
+
+        <dl>
+            <a href="accounts/getForSend?id=${account.id}">Send Money</a>
+        </dl>--%>
+          <a href="accounts/update/delete?id=${account.id}">Delete</a>
+          <a href="accounts/getForAdding?id=${account.id}">Put Money</a>
+          <a href="accounts/getForSend?id=${account.id}">Send Money</a>
+
         <input type="hidden" name="id" value="${account.id}">
         <input type="hidden" name="accountNumber" value="${account.accountNumber}">
         <dl>
@@ -28,12 +44,9 @@
         </dl>
         <input type="hidden" name="balance" value="${account.balance}">
 
-        <dl>
-            <a href="accounts/update/delete?id=${account.id}">Delete</a>
-        </dl>
-
         <button type="submit">Save</button>
-        <button onclick="window.history.back()">Cancel</button>
+        <%--<button onclick="window.history.back()">Cancel</button>--%>
+        <input action="action" type="button" value="Cancel" onclick="history.go(-1);" />
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

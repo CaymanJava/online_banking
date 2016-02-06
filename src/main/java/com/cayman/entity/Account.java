@@ -21,14 +21,16 @@ import java.math.BigDecimal;
 //TODO create index for DB
 @Table(name = "accounts", uniqueConstraints = {@UniqueConstraint(columnNames = "account_number", name = "account_number_idx")})
 public class Account extends BaseEntity {
+    public final static Integer DEFAULT_ID = 0;
+    public final static String EMPTY_STRING = " ";
     public final static String DEFAULT_ACCOUNT_NUMBER = "newAccountNumber";
     public final static String GET_ALL = "Account.getAll";
     public final static String GET = "Account.get";
     public final static String DELETE = "Account.delete";
     public final static String GET_BY_NUMBER = "Account.getByNumber";
     public final static String GET_BY_NUMBER_AND_USER_ID = "Account.getWithoutNumber";
-
     public final static BigDecimal ZERO_BALANCE = AccountUtil.createBigDecimal(0);
+
     @Column(name = "name", nullable = false)
     @NotEmpty
     private String name;

@@ -4,12 +4,17 @@ import com.cayman.entity.Currency;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Properties;
 
 
 public class CurrencyConverter {
     private static Properties property = new Properties();
+
+    public static void main(String[] args) {
+        System.out.println(convertMoney(Currency.PLN, Currency.UAH, new BigDecimal(1000)));
+    }
 
     private CurrencyConverter(){
     }
@@ -24,8 +29,9 @@ public class CurrencyConverter {
 
     public static double getExchangeRate(Currency currency) {
         double result = 0;
-        try (FileInputStream fis = new FileInputStream("src/main/resources/exchange_rates/rates.properties")){
-            property.load(fis);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        try (InputStream input = classLoader.getResourceAsStream("exchange_rates/rates.properties")){
+            property.load(input);
             String currentCurrency = currency.toString().toLowerCase();
             result = Double.parseDouble(property.getProperty(currentCurrency));
         } catch (IOException ignored){}

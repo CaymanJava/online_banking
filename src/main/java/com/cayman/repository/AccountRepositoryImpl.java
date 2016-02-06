@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Repository
-@Transactional(readOnly = true)
+/*@Transactional(readOnly = true)*/
 public class AccountRepositoryImpl implements AccountRepository {
     @PersistenceContext
     private EntityManager entityManager;
@@ -33,7 +33,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         return DataAccessUtils.singleResult(accountList);
     }
 
-    @Transactional
+    /*@Transactional*/
     @Override
     public Account save(Account account, int userId) {
         User user = entityManager.getReference(User.class, userId);
@@ -47,7 +47,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    @Transactional
+    /*@Transactional*/
     public boolean delete(int userId, int accountId) {
         return entityManager.createNamedQuery(Account.DELETE)
                 .setParameter("userId", userId)

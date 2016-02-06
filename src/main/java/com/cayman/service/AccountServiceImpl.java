@@ -7,72 +7,91 @@ import com.cayman.repository.AccountHistoryRepository;
 import com.cayman.repository.AccountRepository;
 import com.cayman.util.AccountNumberCreator;
 import com.cayman.util.AccountUtil;
+import com.cayman.util.CurrencyConverter;
+import com.cayman.util.exceptions.NotAvailableAccountException;
+import com.cayman.util.exceptions.NotEnoughMoneyInTheAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
     @Autowired
-    private AccountRepository repository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    private AccountHistoryRepository historyRepository;
+    private AccountHistoryService historyService;
 
     @Override
     public List<Account> getAll(int userId) {
-        return repository.getAll(userId);
+        return accountRepository.getAll(userId);
     }
 
     @Override
     public Account get(int userId, int accountId) {
-        return repository.get(userId, accountId);
+        return accountRepository.get(userId, accountId);
     }
 
     @Override
+    @Transactional
     public Account save(Account account, int userId) {
-        Account createdAccount = repository.save(account, userId);
-        createNumberForNewAccount(userId);
+        Account createdAccount = accountRepository.save(account, userId);
+        if (createdAccount.getAccountNumber().equals(Account.DEFAULT_ACCOUNT_NUMBER)) {
+            createdAccount = createAndSaveNumberForNewAccount(userId);
+        }
         return createdAccount;
     }
 
     @Override
+    @Transactional
     public Account update(Account account, int userId) {
-        return repository.save(account, userId);
+        return accountRepository.save(account, userId);
     }
 
     @Override
+    @Transactional
     public boolean delete(int userId, int accountId) {
-        return repository.delete(userId, accountId);
+        return accountRepository.delete(userId, accountId);
     }
-    //TODO don't forget about adding history at this method
-
 
     @Override
+    @Transactional
     public void sendMoney(int senderUserId, int senderAccountId,
                           int recipientUserId, int recipientAccountId,
-                          Currency senderCurrency,
+                          Currency senderCurrency, String comment,
                           BigDecimal amountSender, BigDecimal commission, BigDecimal amountRecipient) {
         //withdraw money from sender account
-        withdrawMoneyFromAccount(senderUserId, senderAccountId, amountRecipient);
+        Account senderAccount = withdrawMoneyFromAccount(senderUserId, senderAccountId, amountSender);
 
         //pay commission
-        payCommission(commission, senderCurrency);
+        Account commissionAccount = payCommission(commission, senderCurrency);
 
         //put money to recipient account
-        putMoneyIntoAccount(recipientUserId, recipientAccountId, amountRecipient);
+        Account recipientAccount = putMoneyIntoAccount(recipientUserId, recipientAccountId, amountRecipient);
+
+        historyService.saveSendMoney(senderAccount, recipientAccount, commissionAccount,
+                comment,  amountSender, commission, amountRecipient);
     }
 
     @Override
     public Account getAccountByAccountNumber(String accountNumber) {
-        return repository.getAccountByAccountNumber(accountNumber);
+        return accountRepository.getAccountByAccountNumber(accountNumber);
     }
 
     @Override
     public boolean isAccountAvailable(String accountNumber) {
-        return getAccountByAccountNumber(accountNumber).isEnable();
+        Account accountByAccountNumber;
+        try {
+             accountByAccountNumber = getAccountByAccountNumber(accountNumber);
+        } catch(NoResultException e) {
+            return false;
+        }
+        return accountByAccountNumber.isEnable();
     }
 
     @Override
@@ -81,41 +100,66 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void putMoneyIntoAccount(int userId, int accountId, BigDecimal amount) {
+    @Transactional
+    public Account putMoneyIntoAccount(int userId, int accountId, BigDecimal amount) {
         Account account = get(userId, accountId);
         account.setBalance(AccountUtil.addMoney(account.getBalance(), amount));
-        save(account, userId);
+        return save(account, userId);
     }
 
-    //TODO don't forget about adding history at this method
+
     @Override
-    public void putMoneyFromOutside(int userId, int accountId, BigDecimal amount) {
-        putMoneyIntoAccount(userId, accountId, amount);
+    @Transactional
+    public Account putMoneyFromOutside(int userId, int accountId, BigDecimal amount) {
+        Account account = putMoneyIntoAccount(userId, accountId, amount);
+        historyService.saveAddedMoney(account,amount);
+        return account;
     }
 
     @Override
-    public void withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount) {
+    public Account withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount) {
         Account account = get(userId, accountId);
         account.setBalance(AccountUtil.withdrawMoney(account.getBalance(), amount));
-        save(account, userId);
+        return save(account, userId);
     }
 
     @Override
-    public void payCommission(BigDecimal commissionAmount, Currency currency) {
+    public Account payCommission(BigDecimal commissionAmount, Currency currency) {
         Account commissionAccount = getAccountByAccountNumber(AccountUtil.getAccountNumberForCommission(currency));
-        putMoneyIntoAccount(commissionAccount.getUser().getId(), commissionAccount.getId(), commissionAmount);
-    }
-
-    //TODO don't forget about this method
-    @Override
-    public TransactionTransferObject getTransactionInformation(int userId, int accountId, String recipientAccountNumber, BigDecimal amount) {
-        return null;
+        return putMoneyIntoAccount(commissionAccount.getUser().getId(), commissionAccount.getId(), commissionAmount);
     }
 
     @Override
-    public void createNumberForNewAccount(int userId) {
-        Account account = repository.getAccountByDefaultNumberAndUserId(userId);
+
+    public TransactionTransferObject getTransactionInformation(int userId, int accountId, String comment,
+                                                               String recipientAccountNumber, BigDecimal amount) {
+        if (!isEnoughMoneyInAccount(userId, accountId, amount)){
+            throw new NotEnoughMoneyInTheAccountException();
+        }
+        if (!isAccountAvailable(recipientAccountNumber)) {
+            throw new NotAvailableAccountException();
+        }
+
+        Account sender = get(userId, accountId);
+        Account recipient = getAccountByAccountNumber(recipientAccountNumber);
+
+        Currency senderCurrency = sender.getCurrency();
+        Currency recipientCurrency = recipient.getCurrency();
+
+        List<BigDecimal> commissionAndRecipientAmount = AccountUtil.countCommissionRate(amount);
+        BigDecimal recipientAmount = commissionAndRecipientAmount.get(0);
+        BigDecimal commission = commissionAndRecipientAmount.get(1);
+
+        if (!senderCurrency.equals(recipientCurrency)) {
+            recipientAmount = CurrencyConverter.convertMoney(senderCurrency, recipientCurrency, recipientAmount);
+        }
+        return new TransactionTransferObject(sender, recipient, comment, amount, commission, recipientAmount);
+    }
+
+    @Override
+    public Account createAndSaveNumberForNewAccount(int userId) {
+        Account account = accountRepository.getAccountByDefaultNumberAndUserId(userId);
         account.setAccountNumber(AccountNumberCreator.createAccountNumber(userId, account.getId(), account.getCurrency()));
-        repository.save(account, userId);
+        return accountRepository.save(account, userId);
     }
 }

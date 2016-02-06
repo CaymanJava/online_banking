@@ -5,6 +5,7 @@ import com.cayman.entity.Currency;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,12 @@ public class AccountUtil {
     private static Properties commissionProperty = new Properties();
 
     public static void main(String[] args) {
-        System.out.println(createBigDecimal(1.4));
+        /*List<BigDecimal> commissionAndRecipientAmount = AccountUtil.countCommissionRate(new BigDecimal(1000));
+        BigDecimal recipientAmount = commissionAndRecipientAmount.get(0);
+        BigDecimal commission = commissionAndRecipientAmount.get(1);
+        System.out.println(commissionAndRecipientAmount.size());
+        System.out.println(recipientAmount);
+        System.out.println(commission);*/
     }
 
     private AccountUtil(){
@@ -33,8 +39,9 @@ public class AccountUtil {
     // 1 - commission amount
     public static List<BigDecimal> countCommissionRate(BigDecimal amount) {
         List<BigDecimal> result = new ArrayList<>();
-        try (FileInputStream fis = new FileInputStream("src/main/resources/commission/rates.properties")){
-            rateProperty.load(fis);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        try (InputStream input = classLoader.getResourceAsStream("commission/rates.properties")){
+            rateProperty.load(input);
             double commissionRate = Double.parseDouble(rateProperty.getProperty("rate"));
             BigDecimal commission = amount.multiply(new BigDecimal(commissionRate));
             commission = commission.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -54,9 +61,10 @@ public class AccountUtil {
     }
 
     public static String getAccountNumberForCommission(Currency currency){
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String result = "";
-        try (FileInputStream fis = new FileInputStream("src/main/resources/commission/accounts.properties")){
-            commissionProperty.load(fis);
+        try (InputStream input = classLoader.getResourceAsStream("commission/accounts.properties")){
+            commissionProperty.load(input);
             result = commissionProperty.getProperty(currency.toString().toLowerCase());
         }catch(IOException ignored) {}
         return result;

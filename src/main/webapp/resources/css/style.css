@@ -13,13 +13,14 @@ dd {
     display: inline-block;
     margin-left: 8px;
     vertical-align: top;
+    text-align: center;
 }
 
-.normal {
+.debit {
     color: green;
 }
 
-.exceeded {
+.credit {
     color: red;
 }
 

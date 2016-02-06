@@ -3,16 +3,16 @@ package com.cayman.repository;
 import com.cayman.entity.AccountHistory;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-
+import java.util.List;
 
 
 public interface AccountHistoryRepository {
-    AccountHistory saveInHistory(AccountHistory accountHistory);
-    Collection<AccountHistory> getAllHistoryByUserId(int userId);
-    Collection<AccountHistory> getAllHistoryByAccountId(int accountId);
-    Collection<AccountHistory> getAllHistory();
+    void saveInHistory(AccountHistory accountHistory);
+    List<AccountHistory> getAllHistoryByUserId(int userId);
+    List<AccountHistory> getAllHistoryByAccountId(int userId, int accountId);
     AccountHistory getHistoryById(int accountHistoryId);
-    Collection<AccountHistory> getHistoryBetween(LocalDateTime start, LocalDateTime end, int userId);
-    Collection<AccountHistory> getHistoryBetween(LocalDateTime start, LocalDateTime end);
+    List<AccountHistory> getHistoryBetweenByUserId(LocalDateTime start, LocalDateTime end, int userId);
+    List<AccountHistory> getAllHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
+    List<AccountHistory> getCreditHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
+    List<AccountHistory> getDebitHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
 }

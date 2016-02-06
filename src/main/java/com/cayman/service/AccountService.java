@@ -16,16 +16,16 @@ public interface AccountService {
     boolean delete(int userId, int accountId);
     void sendMoney(int senderUserId, int senderAccountId,
                    int recipientUserId, int recipientAccountId,
-                   Currency senderCurrency,
+                   Currency senderCurrency, String comment,
                    BigDecimal amountSender, BigDecimal commission, BigDecimal amountRecipient);
     Account getAccountByAccountNumber(String accountNumber);
     boolean isAccountAvailable(String accountNumber);
     boolean isEnoughMoneyInAccount(int userId, int accountId, BigDecimal amount);
-    void putMoneyIntoAccount(int userId, int accountId, BigDecimal amount);
-    void putMoneyFromOutside(int userId, int accountId, BigDecimal amount);
-    void withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount);
-    void payCommission(BigDecimal commissionAmount, Currency currency);
-    TransactionTransferObject getTransactionInformation(int userId, int accountId,
+    Account putMoneyIntoAccount(int userId, int accountId, BigDecimal amount);
+    Account putMoneyFromOutside(int userId, int accountId, BigDecimal amount);
+    Account withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount);
+    Account payCommission(BigDecimal commissionAmount, Currency currency);
+    TransactionTransferObject getTransactionInformation(int userId, int accountId, String comment,
                                                         String recipientAccountNumber, BigDecimal amount);
-    void createNumberForNewAccount(int userId);
+    Account createAndSaveNumberForNewAccount(int userId);
 }

@@ -40,6 +40,7 @@
             <th>Balance</th>
             <th>Currency</th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <c:forEach items="${accountList}" var="account">
@@ -54,7 +55,8 @@
                 <td>${account.accountNumber}</td>
                 <td>${account.balance}</td>
                 <td>${account.currency}</td>
-                <td><a href="accounts/update?id=${account.id}">Update</a></td>
+                <td><a href="accounts/update?id=${account.id}">Menu</a></td>
+                <td><a href="accounts/history?id=${account.id}">History</a></td>
             <%--</tr>--%>
                 </tr>
         </c:forEach>

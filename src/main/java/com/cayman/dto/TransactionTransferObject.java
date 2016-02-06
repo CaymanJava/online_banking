@@ -12,11 +12,13 @@ public class TransactionTransferObject {
     private BigDecimal amount;
     private BigDecimal commission;
     private BigDecimal amountInRecipientCurrency;
+    private String comment;
 
-    public TransactionTransferObject(Account senderAccount, Account recipientAccount,
+    public TransactionTransferObject(Account senderAccount, Account recipientAccount, String comment,
                                      BigDecimal amount, BigDecimal commission, BigDecimal amountInRecipientCurrency) {
         this.senderAccount = senderAccount;
         this.recipientAccount = recipientAccount;
+        this.comment = comment;
         this.amount = amount;
         this.commission = commission;
         this.amountInRecipientCurrency = amountInRecipientCurrency;
@@ -68,5 +70,13 @@ public class TransactionTransferObject {
 
     public Currency getRecipientCurrency(){
         return recipientAccount.getCurrency();
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

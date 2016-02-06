@@ -35,7 +35,8 @@
 
 
         <button type="submit">Save</button>
-        <button onclick="window.history.back()">Cancel</button>
+        <%--<button onclick="window.history.back()">Cancel</button>--%>
+        <input action="action" type="button" value="Cancel" onclick="history.go(-1);" />
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
