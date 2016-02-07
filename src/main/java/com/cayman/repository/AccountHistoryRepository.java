@@ -15,4 +15,5 @@ public interface AccountHistoryRepository {
     List<AccountHistory> getAllHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
     List<AccountHistory> getCreditHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
     List<AccountHistory> getDebitHistoryBetweenByAccountId(LocalDateTime start, LocalDateTime end, int userId, int accountId);
+    List<AccountHistory> getCommissionHistoryBetween(LocalDateTime start, LocalDateTime end, int accountId);
 }

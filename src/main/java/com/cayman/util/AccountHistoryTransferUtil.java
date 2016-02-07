@@ -6,6 +6,7 @@ import com.cayman.entity.AccountHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AccountHistoryTransferUtil {
@@ -23,7 +24,7 @@ public class AccountHistoryTransferUtil {
                 AccountUtil.createBigDecimal(history.getSenderAmount()),
                 AccountUtil.createBigDecimal(history.getAmountAfterOperationOnSender()),
                 AccountUtil.createBigDecimal(history.getCommission()),
-                history.getFromUserId(), history.getFromAccountId()
+                history.getFromAccountId()
         );
     }
 
@@ -36,7 +37,7 @@ public class AccountHistoryTransferUtil {
                 history.getComment(),
                 AccountUtil.createBigDecimal(history.getRecipientAmount()),
                 AccountUtil.createBigDecimal(history.getAmountAfterOperationInRecipient()), Account.ZERO_BALANCE,
-                history.getToUserId(), history.getToAccountId()
+                history.getToAccountId()
         );
     }
 
@@ -50,5 +51,19 @@ public class AccountHistoryTransferUtil {
             }
         }
         return result;
+    }
+
+    public static List<AccountHistoryTransferObject> getDTOCommissionList(List<AccountHistory> histories){
+        return histories.stream().map(history -> new AccountHistoryTransferObject(
+                true,
+                history.getOperationTime(),
+                history.getSenderCurrency(),
+                history.getFromAccountNumber(), history.getToAccountNumber(),
+                history.getComment(),
+                AccountUtil.createBigDecimal(history.getSenderAmount()),
+                AccountUtil.createBigDecimal(history.getAmountAfterOperationOnSender()),
+                AccountUtil.createBigDecimal(history.getCommission()),
+                history.getCommissionAccountId()
+        )).collect(Collectors.toList());
     }
 }

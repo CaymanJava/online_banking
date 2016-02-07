@@ -111,4 +111,13 @@ public class AccountHistoryServiceImpl implements AccountHistoryService{
             }
         }
     }
+
+    @Override
+    public List<AccountHistoryTransferObject> getCommissionHistoryBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, int accountId) {
+        return AccountHistoryTransferUtil.getDTOCommissionList(
+                historyRepository.getCommissionHistoryBetween(
+                        LocalDateTime.of(startDate, startTime),
+                        LocalDateTime.of(endDate, endTime),
+                        accountId));
+    }
 }

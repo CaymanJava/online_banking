@@ -76,4 +76,10 @@ public abstract class AbstractUserController {
         account.setEnable(true);
         accountService.update(account, userId);
     }
+
+    public List<AccountHistoryTransferObject> getHistoryCommissionBetween(LocalDate startDate, LocalTime startTime,
+                                                                          LocalDate endDate, LocalTime endTime,
+                                                                          int accountId) {
+        return historyService.getCommissionHistoryBetween(startDate, startTime, endDate, endTime, accountId);
+    }
 }

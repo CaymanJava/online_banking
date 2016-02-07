@@ -29,6 +29,9 @@ import java.time.LocalDateTime;
         @NamedQuery(name = AccountHistory.GET_DEBIT_BETWEEN_BY_ACCOUNT_ID, query = "SELECT ah FROM AccountHistory ah " +
                 "WHERE (ah.toAccountId = :toAccountId AND ah.toUserId = :toUserId)" +
                 "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC"),
+        @NamedQuery(name = AccountHistory.GET_COMMISSION_HISTORY, query = "SELECT ah FROM AccountHistory ah " +
+                "WHERE ah.commissionAccountId = :commissionAccountId " +
+                "AND ah.operationTime BETWEEN :startDate AND :endDate ORDER BY ah.operationTime DESC")
 })
 @Entity
 @Table(name = "account_histories")
@@ -40,6 +43,7 @@ public class AccountHistory extends BaseEntity{
     public final static String GET_ALL_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getBetweenByAccountId";
     public final static String GET_DEBIT_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getDebitBetweenByAccountId";
     public final static String GET_CREDIT_BETWEEN_BY_ACCOUNT_ID = "AccountHistory.getCreditBetweenByAccountId";
+    public final static String GET_COMMISSION_HISTORY = "AccountHistory.getCommissionHistory";
 
     @Column(name = "from_user_id")
     private Integer fromUserId;

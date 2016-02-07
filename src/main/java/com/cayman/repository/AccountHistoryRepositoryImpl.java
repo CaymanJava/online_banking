@@ -50,7 +50,7 @@ public class AccountHistoryRepositoryImpl implements AccountHistoryRepository {
         return DataAccessUtils.singleResult(resultList);
     }
 
-    // for admin only, а может и нет
+    // for admin only, а может и нет, может вообще не нужен
     @Override
     public List<AccountHistory> getHistoryBetweenByUserId(LocalDateTime start, LocalDateTime end, int userId) {
         return entityManager.createNamedQuery(AccountHistory.GET_BETWEEN_BY_USER_ID, AccountHistory.class)
@@ -88,6 +88,15 @@ public class AccountHistoryRepositoryImpl implements AccountHistoryRepository {
         return entityManager.createNamedQuery(AccountHistory.GET_DEBIT_BETWEEN_BY_ACCOUNT_ID, AccountHistory.class)
                 .setParameter("toAccountId", accountId)
                 .setParameter("toUserId", userId)
+                .setParameter("startDate", start)
+                .setParameter("endDate", end)
+                .getResultList();
+    }
+
+    @Override
+    public List<AccountHistory> getCommissionHistoryBetween(LocalDateTime start, LocalDateTime end, int accountId) {
+        return entityManager.createNamedQuery(AccountHistory.GET_COMMISSION_HISTORY, AccountHistory.class)
+                .setParameter("commissionAccountId", accountId)
                 .setParameter("startDate", start)
                 .setParameter("endDate", end)
                 .getResultList();

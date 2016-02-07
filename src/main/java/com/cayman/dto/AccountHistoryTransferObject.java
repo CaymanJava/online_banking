@@ -18,7 +18,6 @@ public class AccountHistoryTransferObject {
     private BigDecimal amount;
     private BigDecimal amountAfterOperation;
     private BigDecimal commission;
-    private Integer userId;
     private Integer accountId;
 
     public AccountHistoryTransferObject(boolean debit,
@@ -26,7 +25,7 @@ public class AccountHistoryTransferObject {
                                         Currency currency, String userAccountNumber, String contractorAccountNumber,
                                         String comment,
                                         BigDecimal amount, BigDecimal amountAfterOperation, BigDecimal commission,
-                                        Integer userId, Integer accountId) {
+                                        Integer accountId) {
         this.debit = debit;
         this.operationTime = operationTime;
         this.currency = currency;
@@ -36,7 +35,6 @@ public class AccountHistoryTransferObject {
         this.amount = amount;
         this.amountAfterOperation = amountAfterOperation;
         this.commission = commission;
-        this.userId = userId;
         this.accountId = accountId;
     }
 
@@ -110,14 +108,6 @@ public class AccountHistoryTransferObject {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getAccountId() {

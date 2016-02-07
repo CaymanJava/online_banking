@@ -28,5 +28,8 @@ public interface AccountHistoryService {
     List<AccountHistoryTransferObject> getHistoryBetweenWithOption(LocalDate startDate, LocalTime startTime,
                                                                    LocalDate endDate, LocalTime endTime,
                                                                    int userId, int accountId,String option);
+    List<AccountHistoryTransferObject> getCommissionHistoryBetween(LocalDate startDate, LocalTime startTime,
+                                                                   LocalDate endDate, LocalTime endTime,
+                                                                   int accountId);
 
 }
