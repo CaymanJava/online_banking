@@ -4,7 +4,6 @@ import com.cayman.dto.TransactionTransferObject;
 import com.cayman.entity.Account;
 import com.cayman.entity.Currency;
 import com.cayman.repository.AccountRepository;
-import com.cayman.util.AccountNumberCreator;
 import com.cayman.util.AccountUtil;
 import com.cayman.util.CurrencyConverter;
 import com.cayman.util.exceptions.ExceptionUtils;
@@ -161,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAndSaveNumberForNewAccount(int userId) {
         Account account = accountRepository.getAccountByDefaultNumberAndUserId(userId);
-        account.setAccountNumber(AccountNumberCreator.createAccountNumber(userId, account.getId(), account.getCurrency()));
+        account.setAccountNumber(AccountUtil.createAccountNumber(userId, account.getId(), account.getCurrency()));
         return accountRepository.save(account, userId);
     }
 }

@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 })
 
 @Entity
-//TODO create index for DB
 @Table(name = "accounts", uniqueConstraints = {@UniqueConstraint(columnNames = "account_number", name = "account_number_idx")})
 public class Account extends BaseEntity {
     public final static Integer DEFAULT_ID = 0;
@@ -35,8 +34,7 @@ public class Account extends BaseEntity {
     @NotEmpty
     private String name;
 
-    @Column(name = "account_number"/*, nullable = false, unique = true*/)
-    /*@NotEmpty*/
+    @Column(name = "account_number")
     private String accountNumber;
 
     @Enumerated(EnumType.STRING)

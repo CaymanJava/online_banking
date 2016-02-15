@@ -7,7 +7,7 @@ import com.cayman.entity.HistoryType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-//for users only
+
 public class AccountHistoryTransferObject {
     private boolean debit;
     private LocalDateTime operationTime;
