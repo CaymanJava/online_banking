@@ -2,7 +2,6 @@ package com.cayman.dto;
 
 
 import com.cayman.entity.Currency;
-import com.cayman.entity.HistoryType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
