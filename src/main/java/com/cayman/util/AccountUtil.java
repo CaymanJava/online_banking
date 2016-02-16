@@ -58,13 +58,10 @@ public class AccountUtil {
         StringBuilder sb = new StringBuilder();
 
         String userPart = String.valueOf(userId);
-        int userPartLength = userPart.length();
-
         String accountPart = String.valueOf(accountId);
-        int accountPartLength = accountPart.length();
 
         sb.append(currencyPart);
-        for (int i = 0; i < (16 - userPartLength - accountPartLength) ; i++) {
+        for (int i = 0; i < (16 - userPart.length() - accountPart.length()) ; i++) {
             sb.append(0);
         }
         sb.append(userPart);
