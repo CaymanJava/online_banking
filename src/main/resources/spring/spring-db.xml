@@ -23,7 +23,8 @@
 
 
     <!--<context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>-->
-    <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
+    <!--<context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>-->
+
 
     <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value = "org.hsqldb.jdbcDriver"/>
@@ -31,11 +32,24 @@
         <property name="username" value = "${database.username}"/>
         <property name="password" value = "${database.password}"/>
     </bean>-->
-    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+    <!--<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
         <property name="driverClassName" value = "org.postgresql.Driver"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value = "${database.username}"/>
         <property name="password" value = "${database.password}"/>
+    </bean>-->
+    <context:property-placeholder location="classpath:db/heroku.properties" system-properties-mode="OVERRIDE"/>
+
+    <bean class="java.net.URI" id="dbUrl">
+        <constructor-arg value="${DATABASE_URL}"/>
+    </bean>
+
+
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+        <property name="driverClassName" value = "org.postgresql.Driver"/>
+        <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + @dbUrl.getPath() }"/>
+        <property name="username" value = "$#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+        <property name="password" value = "$#{ @dbUrl.getUserInfo().split(':')[1] }"/>
     </bean>
 
 
