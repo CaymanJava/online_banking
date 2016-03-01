@@ -83,6 +83,8 @@
                                     <artifactId>webapp-runner</artifactId>
                                     <version>7.0.57.2</version>
                                     <destFileName>webapp-runner.jar</destFileName>
+                                    <source>${java.version}</source>
+                                    <target>${java.version}</target>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
