@@ -65,7 +65,18 @@
     </build>-->
 
     <build>
+        <finalName>online_banking</finalName>
+        <defaultGoal>package</defaultGoal>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -83,8 +94,6 @@
                                     <artifactId>webapp-runner</artifactId>
                                     <version>7.0.57.2</version>
                                     <destFileName>webapp-runner.jar</destFileName>
-                                    <source>${java.version}</source>
-                                    <target>${java.version}</target>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
