@@ -1,0 +1,35 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http pattern="/resources/**" security="none"/>
+    <http pattern="/webjars/**" security="none"/>
+
+
+    <http>
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/registration" access="permitAll"/>
+        <intercept-url pattern="/readme" access="permitAll"/>
+        <intercept-url pattern="/**/admin/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <form-login login-page="/login" default-target-url="/accounts"
+                    authentication-failure-url="/login?error=true"
+                    login-processing-url="/spring_security_check"/>
+        <logout logout-success-url="/login"/>
+        <access-denied-handler error-page="/accessDenied" />
+        <csrf disabled="true"/>
+    </http>
+
+    <beans:bean class="com.cayman.util.PasswordUtil" id="passwordEncoder" factory-method="getPasswordEncoder"/>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="userService">
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+
+    </authentication-manager>
+</beans:beans>

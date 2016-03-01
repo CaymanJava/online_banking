@@ -1,9 +1,15 @@
 package com.cayman.entity;
 
-/**
- * Created by macuser on 31.01.16.
- */
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     ROLE_USER,
-    ROLE_ADMIN
+    ROLE_ADMIN,
+    ROLE_SUPER_ADMIN;
+
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

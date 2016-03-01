@@ -2,6 +2,7 @@ package com.cayman.util.exceptions;
 
 
 import com.cayman.entity.Account;
+import com.cayman.entity.User;
 
 import java.math.BigDecimal;
 
@@ -32,6 +33,12 @@ public class ExceptionUtils {
     public static void checkForNegativeAndZeroAmount(BigDecimal amount) {
         if (amount.compareTo(Account.ZERO_BALANCE) <= 0) {
             throw new IncorrectAmountException();
+        }
+    }
+
+    public static void checkSuperAdmin(User user) {
+        if (user.getRole().name().equals("ROLE_SUPER_ADMIN")) {
+            throw new DoNotTouchSuperAdminException();
         }
     }
 

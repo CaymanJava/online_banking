@@ -23,6 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User saveUser(User user) {
         if (user.isNew()) {
             entityManager.persist(user);
+            //entityManager.refresh(user);
             return user;
         } else {
             return entityManager.merge(user);
@@ -40,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getByEmail(String email) {
-        return (User) entityManager.createNamedQuery(User.GET_BY_EMAIL).setParameter("email", email).getSingleResult();
+    public User getByLogin(String login) {
+        return (User) entityManager.createNamedQuery(User.GET_BY_LOGIN).setParameter("login", login).getSingleResult();
     }
 }

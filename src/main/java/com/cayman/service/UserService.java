@@ -11,5 +11,5 @@ public interface UserService {
     void update(User user);
     void delete(int userId);
     List<User> getAll();
-    User getByEmail(String email);
+    User getByLogin(String email);
 }

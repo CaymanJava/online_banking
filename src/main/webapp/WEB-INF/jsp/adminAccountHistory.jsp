@@ -2,53 +2,79 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
+<link rel="stylesheet" href="webjars/datatables/1.10.9/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="webjars/datetimepicker/2.3.4/jquery.datetimepicker.css">
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <%--http://stackoverflow.com/questions/10327390/how-should-i-get-root-folder-path-in-jsp-page--%>
-    <h3><a href="${pageContext.request.contextPath}">Home</a></h3>
-    <h3>AccountHistory</h3>
-    <form method="post" action="admin/users/settings/history/filter">
-        <input type="hidden" name="userId" value="${userId}">
-        <input type="hidden" name="accountId" value="${accountId}">
-        <dl>
-            <dt>From Date:</dt>
-            <dd><input type="date" name="startDate" value=""></dd>
-        </dl>
-        <dl>
-            <dt>To Date:</dt>
-            <dd><input type="date" name="endDate" value=""></dd>
-        </dl>
-        <dl>
-            <dt>From Time:</dt>
-            <dd><input type="time" name="startTime" value=""></dd>
-        </dl>
-        <dl>
-            <dt>To Time:</dt>
-            <dd><input type="time" name="endTime" value=""></dd>
-        </dl>
-        options:
-        <select name="option">
-            <option value="all" selected>All</option>
-            <option value="debit">Debit</option>
-            <option value="credit">Credit</option>
-        </select>
-        <button type="submit">Filter</button>
-    </form>
-    <hr>
-    <table align="center" border="1" cellpadding="8" cellspacing="0">
+    <h3>_</h3>
+    <h3 align="center"><spring:message code="account.history.title"/></h3>
+        <div class="jumbotron">
+            <div class="container">
+                <div class="shadow">
+                    <div class="view-box">
+                        <form method="post" class="form-horizontal" role="form"  id="filter" <%--action="admin/users/settings/history/filter"--%>action="admin/users/settings/history">
+                            <input type="hidden" name="userId" value="${userId}">
+                            <input type="hidden" name="accountId" value="${accountId}">
+                            <div class="form-group" align="right">
+                                <label class="control-label col-sm-3" for="startDate"><spring:message code="from.date"/></label>
+
+                                <div class="col-sm-2" align="right">
+                                    <input name="startDate" id="startDate" class="date-picker">
+                                </div>
+
+                                <label class="control-label col-sm-3" for="endDate"><spring:message code="to.date"/></label>
+
+                                <div class="col-sm-2" align="right">
+                                    <input name="endDate" id="endDate" class="date-picker">
+                                </div>
+                            </div>
+                            <div class="form-group" align="right">
+                                <label class="control-label col-sm-3" for="startTime"><spring:message code="from.time"/></label>
+
+                                <div class="col-sm-2" align="right">
+                                    <input name="startTime" id="startTime" class="time-picker">
+                                </div>
+
+                                <label class="control-label col-sm-3" for="endTime"><spring:message code="to.time"/></label>
+
+                                <div class="col-sm-2" align="right">
+                                    <input name="endTime" id="endTime" class="time-picker">
+                                </div>
+                            </div>
+
+                            <div class="form-group" align="center">
+                                <div class="col-sm-12" align="center">
+                                    <spring:message code="option"/>
+                                    <select name="option">
+                                        <option value="all" selected><spring:message code="all"/></option>
+                                        <option value="debit"><spring:message code="debit"/></option>
+                                        <option value="credit"><spring:message code="credit"/></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" align="center">
+                                <div class="col-sm-12" align="center">
+                                    <button align="center" type="submit" class="btn btn-primary pull-center"><spring:message code="filter"/></button>
+                                </div>
+                            </div>
+                        </form>
+    <table align="center" border="0" cellpadding="8" cellspacing="0" class="table table-striped display" id="accountHistory">
         <thead>
         <tr>
-            <th>Type</th>
-            <th>Your account</th>
-            <th>Contract's account</th>
-            <th>Amount</th>
-            <th>Balance</th>
-            <th>Commission</th>
-            <th>Operation time</th>
-            <th>Comment</th>
+            <th><spring:message code="operation.type"/></th>
+            <th><spring:message code="your.account"/></th>
+            <th><spring:message code="contracts.account"/></th>
+            <th><spring:message code="amount"/></th>
+            <th><spring:message code="balance"/></th>
+            <th><spring:message code="commission"/></th>
+            <th><spring:message code="operation.type"/></th>
+            <th><spring:message code="comment"/></th>
         </tr>
         </thead>
         <c:forEach items="${accountHistory}" var="history">
@@ -66,8 +92,19 @@
         </c:forEach>
         <input action="action" type="button" value="Back" onclick="history.go(-1);" />
     </table>
-    <%--</form>--%>
+                    </div>
+                </div>
+            </div>
+        </div>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
+
+<script type="text/javascript" src="webjars/datetimepicker/2.3.4/jquery.datetimepicker.js"></script>
+<script type="text/javascript" src="webjars/datatables/1.10.9/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="webjars/noty/2.2.4/jquery.noty.packaged.min.js"></script>
+<script type="text/javascript" src="resources/js/datatablesUtil.js"></script>
+<script>
+    activateFilterScripts();
+</script>
 </html>

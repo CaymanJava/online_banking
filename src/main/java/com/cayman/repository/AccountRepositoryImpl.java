@@ -4,7 +4,6 @@ import com.cayman.entity.Account;
 import com.cayman.entity.User;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +11,6 @@ import java.util.List;
 
 
 @Repository
-/*@Transactional(readOnly = true)*/
 public class AccountRepositoryImpl implements AccountRepository {
     @PersistenceContext
     private EntityManager entityManager;
@@ -33,7 +31,6 @@ public class AccountRepositoryImpl implements AccountRepository {
         return DataAccessUtils.singleResult(accountList);
     }
 
-    /*@Transactional*/
     @Override
     public Account save(Account account, int userId) {
         User user = entityManager.getReference(User.class, userId);
@@ -47,7 +44,6 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    /*@Transactional*/
     public boolean delete(int userId, int accountId) {
         return entityManager.createNamedQuery(Account.DELETE)
                 .setParameter("userId", userId)

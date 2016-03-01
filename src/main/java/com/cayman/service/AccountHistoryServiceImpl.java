@@ -5,7 +5,6 @@ import com.cayman.entity.Account;
 import com.cayman.entity.AccountHistory;
 import com.cayman.repository.AccountHistoryRepository;
 import com.cayman.util.AccountHistoryTransferUtil;
-import com.cayman.util.AccountUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -15,15 +15,6 @@ public class AccountUtil {
     private static Properties rateProperty = new Properties();
     private static Properties commissionProperty = new Properties();
 
-    public static void main(String[] args) {
-        /*List<BigDecimal> commissionAndRecipientAmount = AccountUtil.countCommissionRate(new BigDecimal(1000));
-        BigDecimal recipientAmount = commissionAndRecipientAmount.get(0);
-        BigDecimal commission = commissionAndRecipientAmount.get(1);
-        System.out.println(commissionAndRecipientAmount.size());
-        System.out.println(recipientAmount);
-        System.out.println(commission);*/
-    }
-
     private AccountUtil(){
     }
 

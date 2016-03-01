@@ -11,5 +11,5 @@ public interface UserRepository {
     User saveUser(User user);
     boolean deleteUser(int userId);
     List<User> getAll();
-    User getByEmail(String email);
+    User getByLogin(String email);
 }

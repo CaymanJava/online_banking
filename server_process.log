@@ -1,0 +1,1 @@
+2016-02-29 21:55:01,786 [main] WARN  (BCryptPasswordEncoder.java:87) - Encoded password does not look like BCrypt

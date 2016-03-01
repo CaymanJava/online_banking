@@ -6,8 +6,6 @@ import javax.persistence.*;
 @MappedSuperclass
 @Access(AccessType.FIELD)
 public class BaseEntity {
-    public final static int START_SEQ = 1;
-
     @Id
     @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")

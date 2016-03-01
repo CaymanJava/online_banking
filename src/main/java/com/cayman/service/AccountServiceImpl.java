@@ -54,7 +54,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public boolean delete(int userId, int accountId) {
-        Account account = get(userId, accountId);
         ExceptionUtils.checkForZeroBalance(get(userId, accountId));
         return accountRepository.delete(userId, accountId);
     }
@@ -120,7 +119,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account withdrawMoneyFromAccount(int userId, int accountId, BigDecimal amount) {
         Account account = get(userId, accountId);
-        ExceptionUtils.checkAccountForBlocking(account);
         account.setBalance(AccountUtil.withdrawMoney(account.getBalance(), amount));
         return save(account, userId);
     }
@@ -132,7 +130,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-
     public TransactionTransferObject getTransactionInformation(int userId, int accountId, String comment,
                                                                String recipientAccountNumber, BigDecimal amount) {
         checkingAccountExistence(recipientAccountNumber);
@@ -141,7 +138,6 @@ public class AccountServiceImpl implements AccountService {
         Account sender = get(userId, accountId);
         Account recipient = getAccountByAccountNumber(recipientAccountNumber);
 
-        ExceptionUtils.checkAccountForBlocking(sender);
         ExceptionUtils.checkAccountForBlocking(recipient);
 
         Currency senderCurrency = sender.getCurrency();

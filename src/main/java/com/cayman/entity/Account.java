@@ -46,7 +46,7 @@ public class Account extends BaseEntity {
     @NotNull
     private BigDecimal balance;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
