@@ -75,7 +75,7 @@
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/>
                <!-- <entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.HSQLDialect"/>-->
-                <!--<entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
                 <entry key="#{T(org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory).NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME}" value="cache/ehcache.xml"/>
 
             </map>
