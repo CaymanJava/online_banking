@@ -32,13 +32,14 @@
         <property name="username" value = "${database.username}"/>
         <property name="password" value = "${database.password}"/>
     </bean>-->
+
     <!--<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
         <property name="driverClassName" value = "org.postgresql.Driver"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value = "${database.username}"/>
         <property name="password" value = "${database.password}"/>
     </bean>-->
-    <context:property-placeholder location="classpath:db/heroku.properties" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:/db/heroku.properties" system-properties-mode="OVERRIDE"/>
 
     <bean class="java.net.URI" id="dbUrl">
         <constructor-arg value="${DATABASE_URL}"/>
@@ -50,6 +51,13 @@
         <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + @dbUrl.getPath() }"/>
         <property name="username" value = "$#{ @dbUrl.getUserInfo().split(':')[0] }"/>
         <property name="password" value = "$#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+        <property name="validationQuery" value = "SELECT 1 FROM users"/>
+        <property name="minIdle" value = "2"/>
+        <property name="maxIdle" value = "5"/>
+        <property name="testOnBorrow" value = "true"/>
+        <property name="removeAbandoned" value = "true"/>
+        <property name="testOnConnect" value = "true"/>
+        <property name="testWhileIdle" value = "true"/>
     </bean>
 
 
@@ -65,9 +73,9 @@
              <!--   <entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_AUTO}" value="${hibernate.hbm2ddl.auto}"/>-->
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).CACHE_REGION_FACTORY}" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>
-                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/> <!--default-->
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/>
                <!-- <entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.HSQLDialect"/>-->
-               <!-- <entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
+                <!--<entry key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
                 <entry key="#{T(org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory).NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME}" value="cache/ehcache.xml"/>
 
             </map>
