@@ -96,4 +96,9 @@ public class RootController extends AbstractUserController{
         return "readme";
     }
 
+    @RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
+    public String faviconRedirect(){
+        return "redirect:accounts";
+    }
+
 }
