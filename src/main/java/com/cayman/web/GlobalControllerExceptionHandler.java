@@ -1,6 +1,7 @@
 package com.cayman.web;
 
 import com.cayman.util.exceptions.*;
+import org.apache.log4j.Logger;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.Ordered;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
+    protected final static Logger LOG = Logger.getLogger(GlobalControllerExceptionHandler.class);
     private final static String ACCOUNT_IS_BLOCKED = "account.blocked";
     private final static String INCORRECT_AMOUNT = "incorrect.amount";
     private final static String ACCOUNT_IS_NOT_EXIST = "account.not.exist";
@@ -27,6 +29,7 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     @Order(Ordered.LOWEST_PRECEDENCE)
     ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+        LOG.error("Exception: " + req.getRequestURL());
         ModelAndView mav = new ModelAndView("errors/exception");
 
         mav.addObject("message", e.getMessage());
