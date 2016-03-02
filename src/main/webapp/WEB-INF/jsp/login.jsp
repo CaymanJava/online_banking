@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="resources/css/demo.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/style3.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/animate-custom.css" />
+    <link rel="shortcut icon" href="resources/img/bank.png">
 </head>
 
 <div class="container">
