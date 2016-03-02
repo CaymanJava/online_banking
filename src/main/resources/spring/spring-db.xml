@@ -48,7 +48,7 @@
     <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
         <property name="driverClassName" value = "org.postgresql.Driver"/>
-        <property name="url" value="#{#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
+        <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
         <property name="username" value = "#{ @dbUrl.getUserInfo().split(':')[0] }"/>
         <property name="password" value = "#{ @dbUrl.getUserInfo().split(':')[1] }"/>
         <property name="validationQuery" value = "SELECT 1 FROM users"/>
