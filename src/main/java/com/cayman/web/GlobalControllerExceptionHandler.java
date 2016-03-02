@@ -29,7 +29,7 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     @Order(Ordered.LOWEST_PRECEDENCE)
     ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        LOG.error("Exception: " + req.getRequestURL());
+        LOG.warn("Exception: " + req.getRequestURL());
         ModelAndView mav = new ModelAndView("errors/exception");
 
         mav.addObject("message", e.getMessage());
