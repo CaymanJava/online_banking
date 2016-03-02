@@ -11,5 +11,5 @@
 
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="shortcut icon" href="resources/img/bank.png">
+    <link rel="shortcut icon" type="image/png" href="resources/img/bank.png">
 </head>
